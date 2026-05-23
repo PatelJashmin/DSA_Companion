@@ -7,7 +7,7 @@ public class ConnectionTest {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/dsa_tracker";
         String user = "root"; 
-        String password = "REMOVED_SECRET";
+        String password = "your_password";
 
         try {
             Connection conn = DriverManager.getConnection(url, user, password);
