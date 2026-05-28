@@ -15,21 +15,24 @@ public class Dashboard extends JFrame {
         setLocationRelativeTo(null); 
         setLayout(new BorderLayout(10, 10));
 
-        // 1. Header Panel
         JPanel headerPanel = new JPanel();
+
         headerPanel.setBackground(new Color(41, 128, 185));
+
         JLabel titleLabel = new JLabel("Welcome, " + (UserSession.currentStudentName != null ? UserSession.currentStudentName : "Student") + " | Activity Dashboard");
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        
         headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
         headerPanel.add(titleLabel);
+        
         add(headerPanel, BorderLayout.NORTH);
 
         // 2. Center Panel (The Live Activity Table)
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
-        // Define table columns (Added Attempt ID back for the Delete feature)
+        // Define table columns
         String[] columns = {"Attempt ID", "Date", "Question", "Duration (mins)", "Result", "Link"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
@@ -38,7 +41,7 @@ public class Dashboard extends JFrame {
             }
         };
         activityTable = new JTable(tableModel);
-        activityTable.setRowHeight(25);
+        activityTable.setRowHeight(25); 
         activityTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         
         // Enable Horizontal Scrolling and Set Widths
@@ -124,7 +127,6 @@ public class Dashboard extends JFrame {
             });
         });
 
-        // --- NEW: DELETE LOGIC ---
         btnDelete.addActionListener(e -> {
             int selectedRow = activityTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -137,7 +139,7 @@ public class Dashboard extends JFrame {
             
             if (confirm == JOptionPane.YES_OPTION) {
                 try (Connection conn = DatabaseConnection.getConnection();
-                     PreparedStatement pstmt = conn.prepareStatement("DELETE FROM ATTEMPT WHERE id = ?")) {
+                    PreparedStatement pstmt = conn.prepareStatement("DELETE FROM ATTEMPT WHERE id = ?")) {
                     pstmt.setInt(1, attemptId);
                     pstmt.executeUpdate();
                     refreshTable(); 
@@ -148,7 +150,6 @@ public class Dashboard extends JFrame {
             }
         });
 
-        // --- NEW: LOGOUT LOGIC ---
         btnLogout.addActionListener(e -> {
             UserSession.currentStudentId = 0;
             UserSession.currentStudentName = null;
@@ -156,7 +157,6 @@ public class Dashboard extends JFrame {
             this.dispose();
         });
 
-        // Add all buttons to the panel
         actionPanel.add(btnLogAttempt);
         actionPanel.add(btnManageQuestions);
         actionPanel.add(btnPendingRevisions);
@@ -200,13 +200,5 @@ public class Dashboard extends JFrame {
             JOptionPane.showMessageDialog(this, "Error loading activity: " + ex.getMessage());
             ex.printStackTrace();
         }
-    }
-
-    // Only used if you try to run Dashboard directly instead of through Login
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Dashboard app = new Dashboard();
-            app.setVisible(true);
-        });
     }
 }

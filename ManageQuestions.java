@@ -12,7 +12,6 @@ public class ManageQuestions extends JFrame {
         setSize(450, 400); // Made slightly taller for the new row
         setLocationRelativeTo(null);
         
-        // Increased to 6 rows
         JPanel mainPanel = new JPanel(new GridLayout(6, 2, 15, 15)); 
         mainPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25)); 
 
@@ -30,7 +29,6 @@ public class ManageQuestions extends JFrame {
         comboSource = new JComboBox<>(sources);
         mainPanel.add(comboSource);
 
-        // NEW: Topic Dropdown
         mainPanel.add(new JLabel("Topic:"));
         comboTopic = new JComboBox<>();
         loadTopicsFromDatabase();
@@ -77,7 +75,6 @@ public class ManageQuestions extends JFrame {
             return;
         }
 
-        // NEW: Added student_id to the INSERT query
         String insertQuestionSQL = "INSERT INTO QUESTION (title, level, source, link, student_id) VALUES (?, ?, ?, ?, ?)";
         String insertMapSQL = "INSERT INTO CATEGORY_MAP (topic_name, question_id) VALUES (?, ?)";
 
@@ -88,7 +85,7 @@ public class ManageQuestions extends JFrame {
             pstmtQ.setString(2, level);
             pstmtQ.setString(3, source);
             pstmtQ.setString(4, link);
-            pstmtQ.setInt(5, UserSession.currentStudentId); // Saves it under the logged-in student
+            pstmtQ.setInt(5, UserSession.currentStudentId);
             pstmtQ.executeUpdate();
 
             ResultSet generatedKeys = pstmtQ.getGeneratedKeys();

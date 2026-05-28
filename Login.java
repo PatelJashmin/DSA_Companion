@@ -11,9 +11,11 @@ public class Login extends JFrame {
         setTitle("DSA Tracker - Login");
         setSize(350, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //force this JFrame to be at the center of the screen
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
+        //keep a 20pxl gap between UI compoenets and border.
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         panel.add(new JLabel("Student Name:"));
@@ -32,16 +34,14 @@ public class Login extends JFrame {
 
         add(panel);
 
-        // Login Logic
         btnLogin.addActionListener(e -> {
             String name = txtName.getText();
             String pass = new String(txtPassword.getPassword());
 
-            // Updated to use your 'name' column
             String sql = "SELECT id, name FROM STUDENT WHERE name = ? AND password = ?";
             
             try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
                  
                 pstmt.setString(1, name);
                 pstmt.setString(2, pass);
@@ -53,6 +53,7 @@ public class Login extends JFrame {
                     
                     JOptionPane.showMessageDialog(this, "Welcome, " + UserSession.currentStudentName + "!");
                     
+                    //handover the flow to Dashboard. 
                     new Dashboard().setVisible(true);
                     this.dispose();
                 } else {
@@ -64,22 +65,19 @@ public class Login extends JFrame {
             }
         });
 
-        // Add New Student Logic
         btnAddStudent.addActionListener(e -> {
             String newName = JOptionPane.showInputDialog(this, "Enter New Student Name:");
             if (newName == null || newName.trim().isEmpty()) return;
             
-            // NEW: Prompting for email since your table requires it to be UNIQUE NOT NULL
             String newEmail = JOptionPane.showInputDialog(this, "Enter New Student Email:");
             if (newEmail == null || newEmail.trim().isEmpty()) return;
 
             String newPass = JOptionPane.showInputDialog(this, "Enter New Password:");
             if (newPass == null || newPass.trim().isEmpty()) return;
 
-            // Updated to match your exact schema (joined_on handles itself via DEFAULT CURRENT_DATE)
             String sql = "INSERT INTO STUDENT (name, email, password) VALUES (?, ?, ?)";
             try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, newName);
                 pstmt.setString(2, newEmail);
                 pstmt.setString(3, newPass);
