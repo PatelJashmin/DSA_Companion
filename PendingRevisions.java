@@ -19,7 +19,6 @@ public class PendingRevisions extends JFrame {
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
-        // Added a "Status" column to see if a question is Overdue or Upcoming
         String[] columns = {"Question ID", "Title", "Revision #", "Scheduled Date", "Status"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
@@ -75,7 +74,6 @@ public class PendingRevisions extends JFrame {
         txtQuestionId.setText("");
         txtRevNo.setText("");
 
-        // GENUINE FIX: Removed the "due_on <= CURRENT_DATE" restriction to show everything
         String sql = "SELECT r.question_id, q.title, r.rev_no, r.due_on, " +
                      "CASE WHEN r.due_on <= CURRENT_DATE THEN 'OVERDUE / DUE TODAY' ELSE 'UPCOMING' END as status_msg " +
                      "FROM REVISION r " +
@@ -115,7 +113,6 @@ public class PendingRevisions extends JFrame {
         int score = (int) comboScore.getSelectedItem();
         int studentId = UserSession.currentStudentId;
 
-        // 1. New 5-Tier Interval Calculation Algorithm
         int daysToAdd;
         if (score == 10) {
             daysToAdd = 30; // Mastered: 1 month

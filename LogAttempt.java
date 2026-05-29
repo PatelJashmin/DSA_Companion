@@ -16,16 +16,14 @@ public class LogAttempt extends JFrame {
         setSize(450, 400); // Taller to fit the search bar
         setLocationRelativeTo(null);
 
-        // Increased to 6 rows to accommodate the Search bar
         JPanel mainPanel = new JPanel(new GridLayout(6, 2, 15, 15));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
 
-        // Row 1: Live Search Bar (NEW)
         mainPanel.add(new JLabel("Search Question:"));
         txtSearch = new JTextField();
         mainPanel.add(txtSearch);
 
-        // Row 2: Dropdown (Now updates dynamically)
+        //Dropdown (Now updates dynamically)
         mainPanel.add(new JLabel("Select Question:"));
         comboQuestions = new JComboBox<>();
         loadQuestionsFromDatabase(""); // Load all initially
